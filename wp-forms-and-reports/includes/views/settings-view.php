@@ -153,11 +153,8 @@ function submit_pp_button()
 	$content = substr($file, 6);
 	$content = explode("|", $content);
 	
-	echo "<textarea style='width: 100%'>{$content[0]}</textarea>";
-	echo count($content);
 	if (count($content) > 1)
 	{
-		echo "<textarea style='width: 100%'>";
 		$name_list = explode(";", $content[0]);
 		array_push($name_list, $name);
 		$type_list = explode(";", $content[1]);
@@ -172,16 +169,12 @@ function submit_pp_button()
 			$txt .= $name . ";";
 		}
 		
-		echo "names: $txt<br />";
-		
 		$txt = substr($txt, 0, strlen($txt) - 1) . "|";
 		
 		foreach($type_list as $type)
 		{
 			$txt .= $type . ";";
 		}
-		
-		echo "types: $txt<br />";
 		
 		$txt = substr($txt, 0, strlen($txt) - 1) . "|";
 		
@@ -190,7 +183,7 @@ function submit_pp_button()
 			$txt .= $html . ";";
 		}
 		
-		echo "htmls: $txt </textarea><br />";
+		$txt = substr($txt, 0, strlen($txt) - 1);
 		$file = fopen('../wp-content/plugins/wp-forms-and-reports/assets/buttons.php', "w");
 		fwrite($file, $txt);
 		fclose($file);
@@ -198,23 +191,223 @@ function submit_pp_button()
 	else 
 	{
 		$txt = "<?php {$name}|{$type}|{$html}";
-		echo "<textarea style='width: 100%'>" . $txt . "</textarea>";
 		$file = fopen('../wp-content/plugins/wp-forms-and-reports/assets/buttons.php', "w");
 		fwrite($file, $txt);
 		fclose($file);
 	}
-	/*
+	
 	?>
-		<form action="?page=far_settings" name="f1">
-		</form>
-		
+		<div class="alert alert-success">
+			Successfully added button!
+		</div>
 		<script>
-			document.f1.submit();
+			window.location.href = '?page=far_settings';
 		</script>
 	<?php
-	*/
+}
+
+function edit_button($button)
+{
+	$os = "<?php ";
+	$file = html_entity_decode(htmlentities(file_get_contents(("../wp-content/plugins/wp-forms-and-reports/assets/buttons.php"))));
+	$content = substr($file, 6);
+	$content = explode("|", $content);
+	if (count($content) > 1)
+	{
+		$names = explode(";", $content[0]);
+		$types = explode(";", $content[1]);
+		$htmls = explode(";", $content[2]);
+		
+		$name = "";
+		$type = "";
+		$html = "";
+		
+		if (count($names) > $button)
+			$name = $names[$button];
+		if (count($types) > $button)
+			$type = $types[$button];
+		if (count($htmls) > $button)
+			$html = $htmls[$button];
+	}
+?>
+	<div class="wrap">
+		<h1>Add Button</h1>
+		<hr />
+		<div style="margin-left:30px; margin-right:30px;">
+			<form action="?page=far_settings&action=edit&submit=1" method="POST">
+				<div class="row">
+					<div class="col-4">
+						<div class="form-group">
+							<label for="b-name">Button Name</label>
+							<input type="text" name="b-name" class="form-control" placeholder="button name" value="<?php echo $name ?>" required />
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-4">
+						<div class="form-group">
+							<label for="b-type">Type</label>
+							<select name="b-type" class="form-control" onchange="document.getElementById('submit').disabled = false" required>
+								<option value="1" selected disabled>Select Type</option>
+								<option <?php echo $type == "Buy Now" ? "selected" : ""; $found = true;?>>Buy Now</option>
+								<option <?php echo $type == "Add to Cart" ? "selected" : ""; $found = true;?>>Add to Cart</option>
+								<option <?php echo $type == "Donate" ? "selected" : ""?>>Donate</option>
+								<option <?php echo $type == "Subscription" ? "selected" : ""; $found = true;?>>Subscription</option>
+								<option <?php echo $type == "Installment Plan" ? "selected" : ""; $found = true;?>>Installment Plan</option>
+								<option <?php echo $type == "Automatic Billing" ? "selected" : ""; $found = true;?>>Automatic Billing</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col">
+						<div class="form-group">
+							<label for="b-html">HTML</label>
+							<textarea name="b-html" class="form-control" placeholder="<button html></button html>" required><?php echo $html ?></textarea>
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="button" value="<?php echo $button ?>" />
+				<button name="submit" id="submit" class="button button-primary" <?php echo $found ? "" : "disabled"?>>Edit Button</button>
+			</form>
+		</div>
+	</div>
+<?
+}
+
+function submit_edit_pp_button()
+{
+	if (isset($_POST['b-name']))
+	{
+		$name = $_POST['b-name'];
+	}
+	if (isset($_POST['b-type']))
+	{
+		$type = str_replace("|", "", $_POST['b-type']);
+	}
+	if (isset($_POST['b-html']))
+	{
+		$html = $_POST['b-html'];
+	}
+	if (isset($_POST['button']))
+	{
+		$button = $_POST['button'];
+	}
 	
-	echo '<br />after JavaScript';
+	$file = html_entity_decode(htmlentities(file_get_contents(("../wp-content/plugins/wp-forms-and-reports/assets/buttons.php"))));
+	$content = substr($file, 6);
+	$content = explode("|", $content);
+	
+	if (count($content) > 1)
+	{
+		$name_list = explode(";", $content[0]);
+		$type_list = explode(";", $content[1]);
+		$html_list = explode(";", $content[2]);
+	
+		$txt = "<?php ";
+		
+		for ($i = 0; $i < count($name_list); $i++)
+		{
+			if ($i != $button)
+				$txt .= $name_list[$i] . ";";
+			else
+				$txt .= $name . ";";
+		}
+		
+		$txt = substr($txt, 0, strlen($txt) - 1) . "|";
+		
+		for ($i = 0; $i < count($type_list); $i++)
+		{
+			if ($i != $button)
+				$txt .= $type_list[$i] . ";";
+			else
+				$txt .= $type . ";";
+		}
+		
+		$txt = substr($txt, 0, strlen($txt) - 1) . "|";
+		
+		for ($i = 0; $i < count($html_list); $i++)
+		{
+			if ($i != $button)
+				$txt .= $html_list[$i] . ";";
+			else
+				$txt .= $html . ";";
+		}
+		
+		$txt = substr($txt, 0, strlen($txt) - 1);
+		$file = fopen('../wp-content/plugins/wp-forms-and-reports/assets/buttons.php', "w");
+		fwrite($file, $txt);
+		fclose($file);
+	}
+	
+	?>
+		<div class="alert alert-success">
+			Successfully edited button!
+		</div>
+		<script>
+			window.location.href = '?page=far_settings';
+		</script>
+	<?php
+}
+
+function delete_button($ignore)
+{
+	$os = "<?php ";
+	$file = html_entity_decode(htmlentities(file_get_contents(("../wp-content/plugins/wp-forms-and-reports/assets/buttons.php"))));
+	$content = substr($file, 6);
+	$content = explode("|", $content);
+	
+	if (count($content) > 1)
+	{
+		$name_list = explode(";", $content[0]);
+		$type_list = explode(";", $content[1]);
+		$html_list = explode(";", $content[2]);
+		
+		echo "Skipping: $ignore";
+		
+		for ($i = 0; $i < count($name_list); $i++)
+		{
+			if ($i != $ignore)
+			{
+				$os .= "{$name_list[$i]};";
+			}
+		}
+		
+		$os = substr($os, 0, strlen($os) - 1) . "|";
+		
+		for ($i = 0; $i < count($type_list); $i++)
+		{
+			if ($i != $ignore)
+			{
+				$os .= "{$type_list[$i]};";
+			}
+		}
+		
+		$os = substr($os, 0, strlen($os) - 1) . "|";
+		
+		for ($i = 0; $i < count($html_list); $i++)
+		{
+			if ($i != $ignore)
+			{
+				$os .= "{$html_list[$i]};";
+			}
+		}
+		
+		$os = substr($os, 0, strlen($os) - 1);
+	}
+	
+	$file = fopen('../wp-content/plugins/wp-forms-and-reports/assets/buttons.php', "w");
+	fwrite($file, $os);
+	fclose($file);
+	
+	?>
+		<div class="alert alert-success">
+			Successfully deleted button!
+		</div>
+		<script>
+			window.location.href = '?page=far_settings';
+		</script>
+	<?php
 }
 
 function __main()
@@ -358,15 +551,12 @@ function __main()
 					<?php
 						$file = html_entity_decode(htmlentities(file_get_contents('../wp-content/plugins/wp-forms-and-reports/assets/buttons.php')));
 						$content = substr($file, 6);
-						echo "<textarea>$content</textarea>";
 						$content = explode("|", $content);
 						if (count($content) > 1)
 						{
 							$name = explode(";", $content[0]);
 							$type = explode(";", $content[1]);
 							$html = explode(";", $content[2]);
-							
-							echo "There are " . count($name) . " buttons<br />";
 							
 							for ($i = 0; $i < count($name); $i++)
 							{
@@ -410,15 +600,21 @@ switch ($action)
 	case 'add-button':
 		if (isset($_GET['submit']))
 		{
-			echo count($_POST);
 			submit_pp_button();
 		}
 		else
 			add_button();
 		break;
 	case 'edit':
+		if (isset($_GET['submit']))
+		{
+			submit_edit_pp_button();
+		}
+		else
+			edit_button($_GET['button']);		
 		break;
 	case 'delete':
+		delete_button($_GET['button']);
 		break;
 	case 'main':
 	default:
