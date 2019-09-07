@@ -1,0 +1,8 @@
+.custom-alert{
+	position: relative;
+	padding-left: .75rem;
+	margin-top: 10px;
+	margin-bottom: 2px;
+	border: 1px solid transparent;
+	border-radius: .25rem;
+}

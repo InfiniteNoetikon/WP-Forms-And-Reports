@@ -1,0 +1,118 @@
+	<style>
+		.point {
+			cursor: pointer;
+			background: black;
+		}
+	</style>
+	<script>
+	var Field_Num = 0;
+
+	function add_input(){
+		Field_Num++;
+		var form = document.getElementById("form_inputs");
+		form.innerHTML += "<div class='form-group' id='group" + Field_Num.toString() + "'>" +
+				"<label>Field:</label>" +
+				"<div class='row'>" +
+					"<div class='col-5'>" +
+						"<input name='input" + Field_Num.toString() + "' id='input" + Field_Num.toString() + "' class='form-control' type='input' required/>" +
+					"</div>" +
+					"<div class='col-2'>" +
+						"<select name='input" + Field_Num.toString() + "_type' id='input" + Field_Num.toString() + "_type' onchange='check_type(\"input" + Field_Num.toString() + "\")' class='form-control'>" +
+							get_options() + 
+						"</select>" +
+					"</div>" +
+					"<div class='col-2'>" +
+						"<input name='input" + Field_Num.toString() + "_length' id='input" + Field_Num.toString() + "_length' class='form-control' maxlength='5' />" +
+					"</div>" +
+					"<div class='col-2'>" +
+						"<textarea name='input" + Field_Num.toString() + "_options' id='input" + Field_Num.toString() + "_options' class='form-control' maxlength='999' disabled></textarea>" +
+					"</div>" +
+					"<div class='col-1>" +
+						"<button class='btn' onclick='delete_group(\"group" + Field_Num.toString() + "\")'><img src='http://timothyaltemus.com/pages-to-test/images/trash.png' /></button>" +					
+					"</div>" +
+				"</div>" +
+			"</div>";
+	}
+
+	function get_options(){
+		return "<option value='text'>Text</option>" +
+					"<option value='email'>Email</option>" +
+					"<option value='phone'>Phone</option>" +
+					"<option value='number'>Number</option>" +
+					"<option value='paragraph'>Paragraph</option>" +
+					"<option value='options'>Dropdown</option>" +
+					"<option value='date'>Date</option>" +
+					"<option value='time'>Time</option>" +
+					"<option value='radio'>Multiple Choice</option>" +
+					"<option value='checkbox'>Checkbox</option>" +
+					"<option value='file'>File</option>" +
+					"<option value='timestamp'>Current Timestamp</option>";
+	}
+
+	function check_type(input_name){
+		var type = document.getElementById(input_name + "_type").value;
+		var length = document.getElementById(input_name + "_length");
+		var options = document.getElementById(input_name + "_options");
+		if (type == "options" || type == "file" || type == "radio"){
+			options.disabled = false;
+			length.disabled = true;
+			options.required = false;
+			length.required = true;
+		}
+		else if (type != "paragraph" && type != "datetime" && type != "timestamp"){
+			length.disabled = false;
+			options.disabled = true;
+		}
+		else {
+			length.disabled = true;
+			options.disabled = true;
+		}
+	}
+
+	function delete_group(elementId){
+		var element = document.getElementById(elementId);
+		element.parentNode.removeChild(element);
+	}
+	</script>
+
+	<!-- HEADING -->
+	<div class="wrap">
+
+		<h1 class="wp-heading-inline">Create Form</h1>
+		<a href="#" class="page-title-action" onclick="add_input()">+ Add Field</a>
+		<br />
+		<br />
+		<form action="?page=wp_forms_and_reports_admin_menu&token=create&submit=true" method="POST">
+			
+			<strong>
+				<div class='form-group'><label>Form Title:</label>
+					<div class="row"><div class="col-10"><input name="form_name" class="form-control" required /></div></div>
+				</div>
+				
+				<br />
+				
+				<div class="row">
+					<div class="col-5">
+						Field Name:
+					</div>
+					<div class="col-2">
+						Type of Answer:
+					</div>
+					<div class="col-2">
+						Length of Answer (Number of characters (3,2 = xxx.xx))
+					</div>
+					<div class="col-2">
+						Options (Put each option/file extension on a new line for)
+					</div>
+					<div class="col-1">
+						Delete
+					</div>
+				</div>
+				
+				
+			</strong>
+
+			<div id="form_inputs"></div>
+			<?php submit_button('Create Form'); ?>
+		</form>
+	</div>
