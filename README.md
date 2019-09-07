@@ -2,4 +2,4 @@
 WP-Forms-And-Reports, a WordPress Plugin
 
 ## Install Instructions
-Downlad the file 
+1. Downlad the file: [WP-Forms-And-Reports](https://github.com/InfiniteNoetikon/WP-Forms-And-Reports/wp-forms-and-reports.zip)
