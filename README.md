@@ -1,6 +1,8 @@
 # WP-Forms-And-Reports
 WP-Forms-And-Reports, a WordPress Plugin
 
+### Features
+
 ### Installation Instructions
 Follow the following 6 steps in order to install the WP-Forms-and-Reports plugin.
 1. Downlad the file: [WP-Forms-and-Reports.zip](https://github.com/InfiniteNoetikon/WP-Forms-And-Reports/blob/master/wp-forms-and-reports.zip?raw=true)
