@@ -2,6 +2,11 @@
 WP-Forms-And-Reports, a WordPress Plugin
 
 ### Features
+1. Create Forms
+2. Create Standard and Custom Reports
+3. Google Authorization on Reports
+4. Paypal buttons required to complete form
+5. 
 
 ### Installation Instructions
 Follow the following 6 steps in order to install the WP-Forms-and-Reports plugin.
@@ -12,4 +17,7 @@ Follow the following 6 steps in order to install the WP-Forms-and-Reports plugin
 5. Find the plugin named "WP Forms and Reports" and click activate.
 6. Read the documentation in the documentation page of the WP Forms and Report admin menu.
 
-### Using the WP_FAR_API to Create Custom Reports 
+### Getting Started
+To get started with the WP-Forms-And-Reports WordPress plugin. Please follow the installation instructions and then click on the "Documentation" tab. This will give you instructions on different features and how to use them.
+
+### Using the WP_FAR_API to Create Custom Reports
